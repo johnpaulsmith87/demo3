@@ -10,6 +10,7 @@ Created on Tue Jan 15 12:21:17 2019
 """
 import numpy as np
 from scipy import signal
+from scipy import fftpack as fftpack
 
 class GameOfLife:
     '''
@@ -18,13 +19,15 @@ class GameOfLife:
     def __init__(self, N=256, finite=False, fastMode=False):
         self.grid = np.zeros((N,N), np.uint)
         self.neighborhood = np.zeros((3,3), np.uint) # 8 connected kernel
-        self.neighborhood[1,1] = 0 #do not count centre pixel
+        self.neighborhood[1,1] = 0 #do not count centre pixel - i used this for something else...
         self.finite = finite
         self.fastMode = fastMode
         self.aliveValue = 1
         self.deadValue = 0
         self.rows = N
         self.cols = N
+        self.golConvolutionKernel = np.ones((3,3), np.uint8)
+        self.golConvolutionKernel[1,1] = 0
     def getStates(self):
         '''
         Returns the current states of the cells
@@ -51,11 +54,15 @@ class GameOfLife:
         
         #implement the GoL rules by thresholding the weights
         #PART A CODE HERE
+        #Part E code
+        scoreArray2 = fftpack.ifft2(fftpack.fft2(self.grid) * fftpack.fft2(self.golConvolutionKernel))
+        scoreArray = signal.convolve2d(self.grid, self.golConvolutionKernel, mode='full')
         newGrid = np.zeros((self.rows, self.cols), np.uint8)
         for i in range(self.rows):
             for j in range(self.cols):
                 self.setNeighbourhood((i,j))
-                score = self.getNeighbourhoodTotal()
+                score2 = self.getNeighbourhoodTotal()
+                score = scoreArray2.item(i,j)
                 current = self.grid.item(i,j)
                 if current == self.aliveValue and score < 2:
                     newGrid[i,j] = self.deadValue
