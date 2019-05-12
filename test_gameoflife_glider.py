@@ -8,12 +8,14 @@ Created on Tue Jan 15 12:37:52 2019
 """
 import conway
 
-N = 64
+N = 1024
 
 #create the game of life object
 life = conway.GameOfLife(N)
 #life.insertBlinker((0,0))
-life.insertGlider((0,0))
+#life.insertGlider((0,0))
+life.insertGliderGunFixed((0,0))
+#life.loadFromFile("c3greyship.rle")
 cells = life.getStates() #initial state
 
 #-------------------------------
@@ -37,7 +39,7 @@ def animate(i):
     img.set_array(cellsUpdated)
     return img,
 
-interval = 20 #ms
+interval = 75 #ms
 
 #animate 24 frames with interval between them calling animate function at each frame
 ani = animation.FuncAnimation(fig, animate, frames=24, interval=interval, blit=True)

@@ -13,8 +13,10 @@ N = 64
 
 #create the game of life object
 life = conway.GameOfLife(N)
-life.insertBlinker((0,0))
+#life.insertBlinker((0,0))
 #life.insertGlider((0,0))
+#life.insertGliderGun((0,0))
+life.loadFromFile("glider.rle")
 cells = life.getStates() #initial state
 
 #evolve once
