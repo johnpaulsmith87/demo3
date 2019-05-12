@@ -16,7 +16,7 @@ life = conway.GameOfLife(N)
 #life.insertBlinker((0,0))
 #life.insertGlider((0,0))
 #life.insertGliderGunFixed((0,0))
-life.loadFromFile("2c5-spaceship-gun-p690.rle")
+life.loadFromFile("c3greyship.rle")
 cells = life.getStates() #initial state
 
 #-------------------------------
