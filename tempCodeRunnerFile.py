@@ -1,2 +1,0 @@
-
-    cellsUpdated = life.getStates()

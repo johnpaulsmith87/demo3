@@ -60,7 +60,7 @@ class GameOfLife:
         #implement the GoL rules by thresholding the weights
         #PART A CODE HERE
         #Part E code
-        scoreArray = signal.convolve2d(self.grid, self.golConvolutionKernel, mode='same', boundary='fill', fillvalue=0)
+        scoreArray = signal.convolve2d(self.grid, self.golConvolutionKernel, mode='same', boundary='wrap', fillvalue=0)
         newGrid = np.zeros((self.rows, self.cols), np.uint8)
         for i in range(self.rows):
             for j in range(self.cols):
@@ -263,6 +263,12 @@ class GameOfLife:
                     digitSize = 0
                     if joinedLines[i][j].isdigit():
                         digitSize = 1
+                        if j+digitSize > len(joinedLines[i]) - 1:
+                            #multiple lines!
+                            test = joinedLines[i]
+                            line_counter = int(joinedLines[i][j:j+digitSize])
+                            i += line_counter - 1
+                            break
                         while joinedLines[i][j+digitSize].isdigit():
                             digitSize += 1
                         if joinedLines[i][j+digitSize] != 'b' and joinedLines[i][j+digitSize] != 'o' and joinedLines[i][j+digitSize] != '!':
