@@ -27,7 +27,7 @@ fig = plt.figure()
 
 plt.gray()
 
-img = plt.imshow(cells, animated=True)
+img = plt.imshow(cells, animated=True, vmin=0, vmax=1)
 
 def animate(i):
     """perform animation step"""
@@ -39,7 +39,7 @@ def animate(i):
     img.set_array(cellsUpdated)
     return img,
 
-interval = 75 #ms
+interval = 20 #ms
 
 #animate 24 frames with interval between them calling animate function at each frame
 ani = animation.FuncAnimation(fig, animate, frames=24, interval=interval, blit=True)

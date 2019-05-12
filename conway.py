@@ -52,7 +52,8 @@ class GameOfLife:
         - Any live cell with more than three live neighbors dies, as if by overpopulation.
         - Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction
         '''
-                    
+        deadValue = self.deadValue
+        aliveValue = self.aliveValue
         #get weighted sum of neighbors
         #PART A & E CODE HERE
         
@@ -68,15 +69,18 @@ class GameOfLife:
                 #score3 = scoreArray2.item(i,j)
                 score = scoreArray.item(i,j)
                 current = self.grid.item(i,j)
-                if current == self.aliveValue and score < 2:
-                    newGrid[i,j] = self.deadValue
-                elif current == self.aliveValue and (score == 2 or score == 3):
-                    newGrid[i,j] = self.aliveValue
-                elif current == self.aliveValue and score > 3:
-                    newGrid[i,j] = self.deadValue
-                elif current == self.deadValue and score == 3:
-                    newGrid[i,j] = self.aliveValue
-
+                if current == aliveValue and score < 2:
+                    #newGrid[i,j] = self.deadValue
+                    newGrid.itemset((i,j), deadValue)
+                elif current == aliveValue and (score == 2 or score == 3):
+                    #newGrid[i,j] = self.aliveValue
+                    newGrid.itemset((i,j), aliveValue)
+                elif current == aliveValue and score > 3:
+                    #newGrid[i,j] = self.deadValue
+                    newGrid.itemset((i,j), deadValue)
+                elif current == deadValue and score == 3:
+                    #newGrid[i,j] = self.aliveValue
+                    newGrid.itemset((i,j), aliveValue)
         #update the grid
         self.grid = newGrid #UNCOMMENT THIS WITH YOUR UPDATED GRID
     
