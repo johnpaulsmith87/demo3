@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import matplotlib.colors as pltcolours
 import matplotlib.cm as cm
-import sklearn.preprocessing as sk
 
 #This is a python implementation of Langton's Ant
 
@@ -12,12 +11,8 @@ import sklearn.preprocessing as sk
 R = -1
 L = 1
 N = 256
-frameskip = 200
-
-#taken from COSC3000 computer graphics project
-def normalize(v):
-    norm = np.linalg.norm(v)
-    return v / norm
+frameskip = 5
+rule = 'RL'
 
 class Ant:
     def __init__(self, colours, position, orientation, rules):
@@ -65,7 +60,7 @@ class Grid:
 
     def getStates(self):
         return self.state
-
+    #using wrapping for out of bounds
     def nextPosition(self, position, direction):
         if direction == 0:
             self.setAntPosition(((position[0] + 1) % self.size, position[1]))
@@ -91,11 +86,11 @@ class Grid:
         self.nextPosition(self.getAntPosition(), newOrientation)
 
 def main():
-    grid = Grid(N, 0, rules = 'LRLRLLRRL')
+    grid = Grid(N, 0, rules = rule)
     fig = plt.figure()
     normal = grid.getStates().copy()
     normalizer = pltcolours.Normalize(vmin=0, vmax=len(grid.rules))
-    mappable = cm.ScalarMappable(normalizer, cmap='YlGnBu')
+    mappable = cm.ScalarMappable(normalizer, cmap='tab20c')
     img = plt.imshow(mappable.to_rgba(normal), animated=True)
 
     def animate(i):
@@ -107,7 +102,7 @@ def main():
         img.set_array(mappable.to_rgba(cellsUpdated))
         return img,
 
-    interval = 100 #ms
+    interval = 200 #ms
 
     ani = animation.FuncAnimation(fig, animate, frames=24, interval=interval, blit=True)
 
