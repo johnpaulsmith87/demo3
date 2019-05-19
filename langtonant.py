@@ -9,9 +9,10 @@ import sklearn.preprocessing as sk
 #This is a python implementation of Langton's Ant
 
 #There'll be a "Grid" object and an Ant object.
-R = 1
-L = -1
-N = 64
+R = -1
+L = 1
+N = 256
+frameskip = 200
 
 #taken from COSC3000 computer graphics project
 def normalize(v):
@@ -36,7 +37,7 @@ class Colours:
         return len(self.colours)
 
 class Grid:
-    def __init__(self, size = 64, orientation = 0, rules = 'LRRL'):
+    def __init__(self, size = 64, orientation = 0, rules = 'RL'):
         # direction is a deque of fixed size which we rotate rotate to determine direction
         self.direction = deque([n for n in range(4)], 4)
         #rotate orientation to 0 -> we'll use position 0 to keep the current direction
@@ -90,28 +91,23 @@ class Grid:
         self.nextPosition(self.getAntPosition(), newOrientation)
 
 def main():
-    grid = Grid(N, 0, rules = 'RLLR')
+    grid = Grid(N, 0, rules = 'LRLRLLRRL')
     fig = plt.figure()
     normal = grid.getStates().copy()
-    #normal = np.divide(normal, len(grid.rules))
     normalizer = pltcolours.Normalize(vmin=0, vmax=len(grid.rules))
-    mappable = cm.ScalarMappable(normalizer, cmap='Blues')
-    #norm2 = normalize(grid.getStates())
-    #
+    mappable = cm.ScalarMappable(normalizer, cmap='YlGnBu')
     img = plt.imshow(mappable.to_rgba(normal), animated=True)
 
     def animate(i):
-        grid.run() 
+        for x in range(frameskip):
+            grid.run() 
         cellsUpdated = grid.getStates().copy()
         #add ant position
         cellsUpdated.itemset(grid.getAntPosition(), grid.ant.colour)
-        #
-        #norm2 = normalize(grid.getStates())
-        #normal = np.divide(cellsUpdated, len(grid.rules))
         img.set_array(mappable.to_rgba(cellsUpdated))
         return img,
 
-    interval = 20 #ms
+    interval = 100 #ms
 
     ani = animation.FuncAnimation(fig, animate, frames=24, interval=interval, blit=True)
 
