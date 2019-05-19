@@ -3,14 +3,17 @@ from collections import deque
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import matplotlib.colors as pltcolours
+import matplotlib.cm as cm
+import sklearn.preprocessing as sk
 
 #This is a python implementation of Langton's Ant
 
 #There'll be a "Grid" object and an Ant object.
 R = 1
 L = -1
-N = 128
+N = 64
 
+#taken from COSC3000 computer graphics project
 def normalize(v):
     norm = np.linalg.norm(v)
     return v / norm
@@ -87,17 +90,25 @@ class Grid:
         self.nextPosition(self.getAntPosition(), newOrientation)
 
 def main():
-    grid = Grid(N, 0, rules = 'RLR')
+    grid = Grid(N, 0, rules = 'RLLR')
     fig = plt.figure()
-    #normal = 
-    img = plt.imshow(normalize(grid.getStates()), animated=True, vmin = 0, vmax = len(grid.colours) - 1, cmap='jet')
+    normal = grid.getStates().copy()
+    #normal = np.divide(normal, len(grid.rules))
+    normalizer = pltcolours.Normalize(vmin=0, vmax=len(grid.rules))
+    mappable = cm.ScalarMappable(normalizer, cmap='Blues')
+    #norm2 = normalize(grid.getStates())
+    #
+    img = plt.imshow(mappable.to_rgba(normal), animated=True)
 
     def animate(i):
         grid.run() 
         cellsUpdated = grid.getStates().copy()
         #add ant position
         cellsUpdated.itemset(grid.getAntPosition(), grid.ant.colour)
-        img.set_array(normalize(cellsUpdated))
+        #
+        #norm2 = normalize(grid.getStates())
+        #normal = np.divide(cellsUpdated, len(grid.rules))
+        img.set_array(mappable.to_rgba(cellsUpdated))
         return img,
 
     interval = 20 #ms
